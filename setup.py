@@ -2,6 +2,7 @@
 
 # Author: Genevieve Hayes
 # Modified: Andrew Rollings
+# Modified: Aaron Briel
 # License: BSD 3 clause
 
 from setuptools import setup
@@ -15,14 +16,14 @@ def readme():
         return _file.read()
 
 
-setup(name='mlrose-hiive',
+setup(name='mlrose-abriel',
       version='1.2.0-ga',
       description="MLROSe: Machine Learning, Randomized Optimization and"
       + " Search",
       long_description=readme(),
       long_description_content_type='text/markdown',
-      url='https://github.com/hiive/mlrose',
-      author='Genevieve Hayes (modifed by Andrew Rollings)',
+      url='https://github.com/abriel/mlrose',
+      author='Genevieve Hayes (modifed by Andrew Rollings, Aaron Briel)',
       license='BSD',
       classifiers=[
           "Intended Audience :: Education",
