@@ -11,7 +11,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.metrics import mean_squared_error, log_loss
 from sklearn.externals import six
 from .activation import identity, relu, sigmoid, softmax, tanh
-from .algorithms import random_hill_climb, simulated_annealing, genetic_alg
+from .algorithms import random_hill_climb, simulated_annealing, genetic_alg, mimic
 from .opt_probs import ContinuousOpt
 from mlrose.algorithms.decay import GeomDecay
 
@@ -599,6 +599,24 @@ class BaseNeuralNetwork(six.with_metaclass(ABCMeta, BaseEstimator)):
                 fitted_weights, loss = genetic_alg(
                     problem,
                     pop_size=self.pop_size, mutation_prob=self.mutation_prob,
+                    max_attempts=self.max_attempts if self.early_stopping else
+                    self.max_iters,
+                    max_iters=self.max_iters,
+                    curve=self.curve)
+
+        elif self.algorithm == 'mimic':
+            if self.curve:
+                fitted_weights, loss, fitness_curve = mimic(
+                    problem,
+                    pop_size=self.pop_size,
+                    max_attempts=self.max_attempts if self.early_stopping else
+                    self.max_iters,
+                    max_iters=self.max_iters,
+                    curve=self.curve)
+            else:
+                fitted_weights, loss = mimic(
+                    problem,
+                    pop_size=self.pop_size,
                     max_attempts=self.max_attempts if self.early_stopping else
                     self.max_iters,
                     max_iters=self.max_iters,
