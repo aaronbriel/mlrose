@@ -16,13 +16,13 @@ def readme():
         return _file.read()
 
 
-setup(name='mlrose-abriel',
+setup(name='mlrose-aaronbriel',
       version='1.2.0-ga',
       description="MLROSe: Machine Learning, Randomized Optimization and"
       + " Search",
       long_description=readme(),
       long_description_content_type='text/markdown',
-      url='https://github.com/abriel/mlrose',
+      url='https://github.com/aaronbriel/mlrose',
       author='Genevieve Hayes (modifed by Andrew Rollings, Aaron Briel)',
       license='BSD',
       classifiers=[
