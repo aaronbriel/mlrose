@@ -205,7 +205,7 @@ class NetworkWeights:
     """
 
     def __init__(self, X, y, node_list, activation, bias=True,
-                 is_classifier=True, learning_rate=0.1):
+                 is_classifier=True, learning_rate=0.1, alpha=0.0001):
 
         # Make sure y is an array and not a list
         y = np.array(y)
@@ -238,6 +238,9 @@ class NetworkWeights:
         if learning_rate <= 0:
             raise Exception("""learning_rate must be greater than 0.""")
 
+        if alpha <= 0:
+            raise Exception("""alpha must be greater than 0.""")
+
         self.X = X
         self.y_true = y
         self.node_list = node_list
@@ -245,17 +248,18 @@ class NetworkWeights:
         self.bias = bias
         self.is_classifier = is_classifier
         self.learning_rate = learning_rate
+        self.alpha = alpha
 
         # Determine appropriate loss function and output activation function
         if self.is_classifier:
-            self.loss = log_loss
+            self.loss = log_loss + self.alpha
 
             if np.shape(self.y_true)[1] == 1:
                 self.output_activation = sigmoid
             else:
                 self.output_activation = softmax
         else:
-            self.loss = mean_squared_error
+            self.loss = mean_squared_error + self.alpha
             self.output_activation = identity
 
         self.inputs_list = []
@@ -385,6 +389,7 @@ class BaseNeuralNetwork(six.with_metaclass(ABCMeta, BaseEstimator)):
                  bias=True,
                  is_classifier=True,
                  learning_rate=0.1,
+                 alpha=0.0001,
                  early_stopping=False,
                  clip_max=1e+10,
                  restarts=0,
@@ -410,6 +415,7 @@ class BaseNeuralNetwork(six.with_metaclass(ABCMeta, BaseEstimator)):
         self.bias = bias
         self.is_classifier = is_classifier
         self.learning_rate = learning_rate
+        self.alpha = alpha
         self.early_stopping = early_stopping
         self.clip_max = clip_max
         self.restarts = restarts
@@ -440,6 +446,9 @@ class BaseNeuralNetwork(six.with_metaclass(ABCMeta, BaseEstimator)):
 
         if self.learning_rate <= 0:
             raise Exception("""learning_rate must be greater than 0.""")
+
+        if self.alpha <= 0:
+            raise Exception("""alpha must be greater than 0.""")
 
         if not isinstance(self.early_stopping, bool):
             raise Exception("""early_stopping must be True or False.""")
@@ -525,7 +534,8 @@ class BaseNeuralNetwork(six.with_metaclass(ABCMeta, BaseEstimator)):
         fitness = NetworkWeights(X, y, node_list,
                                  self.activation_dict[self.activation],
                                  self.bias, self.is_classifier,
-                                 learning_rate=self.learning_rate)
+                                 learning_rate=self.learning_rate,
+                                 alpha=self.alpha)
 
         problem = ContinuousOpt(num_nodes, fitness, maximize=False,
                                 min_val=-1*self.clip_max,
