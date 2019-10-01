@@ -252,14 +252,14 @@ class NetworkWeights:
 
         # Determine appropriate loss function and output activation function
         if self.is_classifier:
-            self.loss = log_loss + self.alpha
+            self.loss = log_loss #+ self.alpha
 
             if np.shape(self.y_true)[1] == 1:
                 self.output_activation = sigmoid
             else:
                 self.output_activation = softmax
         else:
-            self.loss = mean_squared_error + self.alpha
+            self.loss = mean_squared_error #+ self.alpha
             self.output_activation = identity
 
         self.inputs_list = []
